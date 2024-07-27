@@ -11,6 +11,7 @@ type envConfig struct {
 	kafkaGroupID string
 	pgConnString string
 	httpAddr     string
+	bufferSize   string
 }
 
 func loadEnvConfig() (*envConfig, error) {
@@ -22,6 +23,7 @@ func loadEnvConfig() (*envConfig, error) {
 		kafkaGroupID    = "KAFKA_GROUP_ID"
 		pgConnStringEnv = "PG_CONN"
 		httpAddr        = "HTTP_ADDR"
+		bufferSize      = "BUFFER_SIZE"
 	)
 
 	var ok bool
@@ -51,6 +53,11 @@ func loadEnvConfig() (*envConfig, error) {
 	cfg.httpAddr, ok = os.LookupEnv(httpAddr)
 	if !ok {
 		return nil, fmt.Errorf(provideEnvErrorMsg, httpAddr)
+	}
+
+	cfg.bufferSize, ok = os.LookupEnv(bufferSize)
+	if !ok {
+		return nil, fmt.Errorf(provideEnvErrorMsg, bufferSize)
 	}
 
 	return cfg, nil

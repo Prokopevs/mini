@@ -1,5 +1,5 @@
 "make build_image"
-"sudo PG_USER=postgres PG_PASSWORD=postgres KAFKA_BROKER=broker:9092 KAFKA_TOPIC=topicname KAFKA_GROUP_ID=group docker compose up"
+"sudo PG_USER=postgres PG_PASSWORD=postgres KAFKA_BROKER=broker:9092 KAFKA_TOPIC=topicname KAFKA_GROUP_ID=group BUFFER_SIZE=3 docker compose up"
 
 создать топик:
 docker-compose exec broker kafka-topics --create --topic topicname --partitions 1 --replication-factor 1 --bootstrap-server broker:9092

@@ -2,7 +2,6 @@ package worker
 
 import (
 	"context"
-	"fmt"
 
 	kf "github.com/Prokopevs/mini/server/internal/kafka"
 	"github.com/Prokopevs/mini/server/internal/service"
@@ -51,7 +50,6 @@ func (e *Listener) handleMessage(ctx context.Context) {
 		e.logger.Infow("failed update messages", "err", err)
 		return
 	}
-	fmt.Println(id, "-----------")
 
 	err = commit(ctx)
 	if err != nil {

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"os"
@@ -43,7 +44,12 @@ func run() error {
 	sugaredLogger := logger.Sugar()
 
 	httpServer := handler.NewHTTP(cfg.httpAddr, sugaredLogger, messageSvc)
-	sender := worker.NewSender(10*time.Second, dbConn, sugaredLogger, kafkaProducer, 3)
+
+	buffSize, err := strconv.Atoi(cfg.bufferSize)
+	if err != nil {
+		return err
+	}
+	sender := worker.NewSender(10*time.Second, dbConn, sugaredLogger, kafkaProducer, buffSize)
 	reader := worker.NewListener(sugaredLogger, kafkaConsumer, dbConn)
 
 	ctx, cancel := context.WithCancel(context.Background())

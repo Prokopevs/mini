@@ -29,6 +29,7 @@ services:
       KAFKA_BROKER: ${KAFKA_BROKER}
       KAFKA_TOPIC: ${KAFKA_TOPIC}
       KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
+      BUFFER_SIZE: ${BUFFER_SIZE}
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.0
     container_name: zookeeper
