@@ -38,19 +38,22 @@ func run() error {
 		return err
 	}
 
-	kafkaProducer := kafka.NewProducer(cfg.kafkaTopic, []string{cfg.kafkaBroker}, cfg.kafkaGroupID)
-	kafkaConsumer := kafka.NewConsumer(cfg.kafkaTopic, []string{cfg.kafkaBroker}, cfg.kafkaGroupID)
-
-	messageSvc := service.NewMessageService(dbConn)
-
-	httpServer := handler.NewHTTP(cfg.httpAddr, sugaredLogger, messageSvc)
-
-	buffSize, err := strconv.Atoi(cfg.bufferSize)
+	bufSize, err := strconv.Atoi(cfg.bufferSize)
 	if err != nil {
 		return err
 	}
-	sender := worker.NewSender(10*time.Second, dbConn, sugaredLogger, kafkaProducer, buffSize)
-	reader := worker.NewListener(sugaredLogger, kafkaConsumer, dbConn)
+
+	kafkaProducer := kafka.NewProducer(cfg.kafkaTopic, []string{cfg.kafkaBroker}, cfg.kafkaGroupID)
+	defer kafkaProducer.Close()
+	kafkaConsumer := kafka.NewConsumer(cfg.kafkaTopic, []string{cfg.kafkaBroker}, cfg.kafkaGroupID)
+	defer kafkaConsumer.Close()
+
+	messageService := service.NewMessageService(dbConn, kafkaProducer, kafkaConsumer, sugaredLogger, bufSize)
+
+	httpServer := handler.NewHTTP(cfg.httpAddr, sugaredLogger, messageService)
+
+	sender := worker.NewSender(10*time.Second, messageService, sugaredLogger.With("pkg", "sender"))
+	reader := worker.NewListener(sugaredLogger.With("pkg", "reader"), messageService)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	wg := &sync.WaitGroup{}
@@ -74,7 +77,7 @@ func run() error {
 	}(ctx)
 
 	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(termChan, syscall.SIGINT, syscall.SIGTERM)
 
 	<-termChan
 	cancel()
@@ -84,10 +87,11 @@ func run() error {
 	return nil
 }
 
-//  @title mini server
-//  @version 1.0
+//	@title mini server
+//	@version 1.0
 //	@description This is mini server
-//	@host localhost:5555
+//	@host mini.eridani.site
+// 	@schemes http https
 //	@BasePath /api/v1
 func main() {
 	err := run()

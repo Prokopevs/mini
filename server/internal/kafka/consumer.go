@@ -6,14 +6,7 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
-	
 )
-
-// Consumer - kafka consumer.
-type Consumer interface {
-	ReadMessage(context.Context) (CommitFunc, int, error)
-	Close() error
-}
 
 // ConsumerImpl - consumer implementation.
 type ConsumerImpl struct {
@@ -36,7 +29,7 @@ func NewConsumer(topic string, brokers []string, groupID string) *ConsumerImpl {
 }
 
 // UnmarshalMessage - fetch message from kafka broker.
-func (c *ConsumerImpl) ReadMessage(ctx context.Context) (CommitFunc, int, error) {
+func (c *ConsumerImpl) FetchMessage(ctx context.Context) (func(context.Context) error, int, error) {
 	kafkaMsg, err := c.reader.FetchMessage(ctx)
 	if err != nil {
 		return func(ctx2 context.Context) error { return nil }, 0, err

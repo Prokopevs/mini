@@ -21,7 +21,7 @@ definitions:
       message:
         type: string
     type: object
-host: localhost:5555
+host: mini.eridani.site
 info:
   contact: {}
   description: This is mini server
@@ -77,4 +77,7 @@ paths:
           schema:
             $ref: '#/definitions/handler.errorResponse'
       summary: Get all messages
+schemes:
+- http
+- https
 swagger: "2.0"
