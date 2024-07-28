@@ -1,7 +1,26 @@
-"make build_image"
-"sudo PG_USER=postgres PG_PASSWORD=postgres KAFKA_BROKER=broker:9092 KAFKA_TOPIC=topicname KAFKA_GROUP_ID=group BUFFER_SIZE=3 docker compose up"
+1) cd mini && make build_image
+2) cd server 
+3) sudo PG_USER=postgres PG_PASSWORD=postgres KAFKA_BROKER=broker:9092 KAFKA_TOPIC=topicname KAFKA_GROUP_ID=group BUFFER_SIZE=3 docker compose up              
+4) create database gamedb in docker postgres image
+    - "docker ps -a" chose your postgres container id 
+    - "docker start <id>"
+    - "docker exec -it miniPostgresCont psql -U postgres"
+    - "create database minidb;"
+    - "\q"
+5) start migration
+    - to find 172.21.0.2 input command: "docker inspect miniPostgresCont" and find field "IPAddress"
+    - migrate -path db/migrations -database "postgres://postgres:postgres@172.21.0.2:5432/minidb?sslmode=disable" -verbose up      
+6) start server with command 3
+7) open new terminal
+8) create topic
+    - docker-compose exec broker kafka-topics --create --topic topicname --partitions 1 --replication-factor 1 --bootstrap-server broker:9092
+    - посмотреть создался ли топик: docker exec broker kafka-topics --bootstrap-server broker:9092 --describe todos 
+9) restart server
 
-создать топик:
-docker-compose exec broker kafka-topics --create --topic topicname --partitions 1 --replication-factor 1 --bootstrap-server broker:9092
-посмотреть создался ли топик:
-docker exec broker kafka-topics --bootstrap-server broker:9092 --describe todos 
+logs:
+message-api-1     | {"level":"info","ts":1722179582.900519,"caller":"db/message.go:20","msg":"Successfully added to db message with id","id":128}
+message-api-1     | {"level":"info","ts":1722179589.2348382,"caller":"worker/sender.go:73","msg":"Successfully sended messages to kafka","ids":[128]}
+message-api-1     | {"level":"info","ts":1722179589.2356353,"caller":"worker/sender.go:82","msg":"Changed statuses to `send` in db for","ids":[128]}
+message-api-1     | {"level":"info","ts":1722179589.2397115,"caller":"worker/listener.go:58","msg":"Successfully readed from kafka","id":128}
+message-api-1     | {"level":"info","ts":1722179589.2397833,"caller":"worker/listener.go:59","msg":"Changed statuses to `received` in db for","id":128}
+

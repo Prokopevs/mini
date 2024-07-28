@@ -29,7 +29,11 @@ func run() error {
 		return err
 	}
 
-	dbConn, err := db.NewDatabase(context.Background(), cfg.pgConnString)
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+	sugaredLogger := logger.Sugar()
+
+	dbConn, err := db.NewDatabase(context.Background(), sugaredLogger, cfg.pgConnString)
 	if err != nil {
 		return err
 	}
@@ -38,10 +42,6 @@ func run() error {
 	kafkaConsumer := kafka.NewConsumer(cfg.kafkaTopic, []string{cfg.kafkaBroker}, cfg.kafkaGroupID)
 
 	messageSvc := service.NewMessageService(dbConn)
-
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
-	sugaredLogger := logger.Sugar()
 
 	httpServer := handler.NewHTTP(cfg.httpAddr, sugaredLogger, messageSvc)
 

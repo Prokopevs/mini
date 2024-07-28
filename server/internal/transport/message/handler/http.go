@@ -12,9 +12,9 @@ import (
 )
 
 type Service interface {
-	CreateMessage(ctx context.Context, mess *model.MessageCreate) (error)
+	CreateMessage(ctx context.Context, mess *model.MessageCreate) error
 	GetMessages(ctx context.Context) ([]*model.Message, error)
-	UpdateMessages(ctx context.Context, status string, ids []int) (error)
+	UpdateMessages(ctx context.Context, status string, ids []int) error
 	GetMessagesEvent(ctx context.Context, limit int) ([]int, error)
 }
 

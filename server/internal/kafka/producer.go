@@ -3,15 +3,9 @@ package kafka
 import (
 	"context"
 	"time"
-
+	"strconv"
 	"github.com/segmentio/kafka-go"
 )
-
-// Producer - kafka producer.
-type Producer interface {
-	SendMessages(context.Context, []kafka.Message) error
-	Close() error
-}
 
 // producer - producer implementation.
 type producer struct {
@@ -19,7 +13,7 @@ type producer struct {
 }
 
 // NewProducer - ConsumerImpl constructor.
-func NewProducer(topic string, brokers []string, groupID string) Producer {
+func NewProducer(topic string, brokers []string, groupID string) *producer {
 	return &producer{
 		writer: kafka.NewWriter(kafka.WriterConfig{
 			Brokers: brokers,
@@ -32,8 +26,19 @@ func NewProducer(topic string, brokers []string, groupID string) Producer {
 	}
 }
 
-func (p *producer) SendMessages(ctx context.Context, msg []kafka.Message) error {
-	err := p.writer.WriteMessages(ctx, msg...)
+func (p *producer) NotifyMessagesCreated(ctx context.Context, ids []int) error {
+	kafkaMsgs := make([]kafka.Message, 0, len(ids))
+
+	// create kafka messages array
+	for _, id := range ids {
+		idStr := strconv.Itoa(id)
+		kafkaMsgs = append(kafkaMsgs, kafka.Message{
+			Key:   []byte(idStr),
+			Value: []byte(idStr),
+		})
+	}
+	
+	err := p.writer.WriteMessages(ctx, kafkaMsgs...)
 	if err != nil {
 		return err
 	}

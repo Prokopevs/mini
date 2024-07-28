@@ -10,6 +10,7 @@ type DB interface {
 	GetMessages(ctx context.Context) ([]*model.Message, error)
 	UpdateMessages(ctx context.Context, status string, ids []int) (error)
 	GetMessagesEvent(ctx context.Context, limit int) ([]int, error)
+	RunTx(ctx context.Context, f func(context.Context) error) error
 }
 
 type MessageService struct {

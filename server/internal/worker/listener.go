@@ -23,7 +23,7 @@ func NewListener(logger *zap.SugaredLogger, kafkaConsumer kf.Consumer, db servic
 }
 
 func (e *Listener) Listen(ctx context.Context) {
-	e.logger.Info("Listening for messages.")
+	e.logger.Infow("Listening for messages.")
 	for {
 		select {
 		case <-ctx.Done():
@@ -47,7 +47,7 @@ func (e *Listener) handleMessage(ctx context.Context) {
 	status := "received"
 	err = e.db.UpdateMessages(ctx, status, []int{id})
 	if err != nil {
-		e.logger.Infow("failed update messages", "err", err)
+		e.logger.Errorw("failed update messages", "err", err)
 		return
 	}
 
@@ -55,4 +55,6 @@ func (e *Listener) handleMessage(ctx context.Context) {
 	if err != nil {
 		e.logger.Errorw("Commit kafka message.", "err", err)
 	}
+	e.logger.Infow("Successfully readed from kafka", "id", id)
+	e.logger.Infow("Changed statuses to `received` in db for", "id", id)
 }
