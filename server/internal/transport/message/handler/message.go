@@ -24,7 +24,7 @@ type errorResponse struct {
 func (h *HTTP) CreateMessage(c *gin.Context) {
 	m := &model.MessageCreate{}
 	if err := c.ShouldBindJSON(m); err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse{Error: "Internal server error", Message: "wrond data provided"})
+		c.JSON(http.StatusBadRequest, errorResponse{Error: "Bad request", Message: "wrond data provided"})
 		return
 	}
 
