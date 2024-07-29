@@ -7,6 +7,11 @@ definitions:
       message:
         type: string
     type: object
+  handler.okResponse:
+    properties:
+      status:
+        type: string
+    type: object
   model.Message:
     properties:
       id:
@@ -46,9 +51,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Message'
-            type: array
+            $ref: '#/definitions/handler.okResponse'
         "400":
           description: Bad Request
           schema:

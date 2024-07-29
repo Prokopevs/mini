@@ -12,12 +12,16 @@ type errorResponse struct {
 	Message string `json:"message"`
 }
 
+type okResponse struct {
+	Status string `json:"status"`
+}
+
 // @Summary  	 Create message
 // @Description  Add message to DB
 // @Accept 	 	 json
 // @Produce 	 json
 // @Param        request  body  model.MessageCreate  true  "body"
-// @Success 	 200  {array}   model.Message
+// @Success 	 200  {object}  okResponse
 // @Failure      400  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /api/v1/create [post]“
@@ -40,7 +44,7 @@ func (h *HTTP) CreateMessage(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, "Ok")
+	c.JSON(http.StatusOK, okResponse{Status: "created"})
 }
 
 // @Summary  	 Get all messages
