@@ -1,7 +1,7 @@
 1) cd mini && make build_image
 2) cd server 
 3) sudo PG_USER=postgres PG_PASSWORD=postgres KAFKA_BROKER=broker:9092 KAFKA_TOPIC=topicname KAFKA_GROUP_ID=group BUFFER_SIZE=3 docker compose up              
-4) create database gamedb in docker postgres image
+4) create database minidb in docker postgres image
     - "docker ps -a" chose your postgres container id 
     - "docker start <id>"
     - "docker exec -it miniPostgresCont psql -U postgres"
@@ -23,4 +23,3 @@ message-api-1     | {"level":"info","ts":1722179589.2348382,"caller":"worker/sen
 message-api-1     | {"level":"info","ts":1722179589.2356353,"caller":"worker/sender.go:82","msg":"Changed statuses to `send` in db for","ids":[128]}
 message-api-1     | {"level":"info","ts":1722179589.2397115,"caller":"worker/listener.go:58","msg":"Successfully readed from kafka","id":128}
 message-api-1     | {"level":"info","ts":1722179589.2397833,"caller":"worker/listener.go:59","msg":"Changed statuses to `received` in db for","id":128}
-
