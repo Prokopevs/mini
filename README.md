@@ -2,15 +2,17 @@
 ---
 
 ### Description
-- User create a message and send it to the server. The server processes the message and places it in the messages table with **status idle**. 
-- To ensure delivery to Kafka, the **Outbox pattern** was applied. The Outbox table did not need to be created because the message entity already has the outbox property. 
-- Next, for visibility, a worker is launched every **5 seconds** to observe how message statuses are updated. The worker reads up to **3 messages** with status='idle' per limit. Then, the message IDs are sent to Kafka and marked as sent **(status='send')**. 
-- Kafka consumers read the message IDs and then update their status to **received**.
+- User create a message and send it to the server. The server processes the message and places it in the messages table with `status idle`. 
+- To ensure delivery to Kafka, the `Outbox pattern` was applied. The Outbox table did not need to be created because the message entity already has the outbox property. 
+- Next, for visibility, a worker is launched every `5 seconds` to observe how message statuses are updated. The worker reads up to `3 messages` with status='idle' per limit. Then, the message IDs are sent to Kafka and marked as sent `(status='send')`. 
+- Kafka consumers read the message IDs and then update their status to `received`.
 
 ### Endpoints
-`http://localhost:5555/api/v1/getMessages` (Get) Returns a list of all messages, or an empty array if there are none.
-`http://localhost:5555/api/v1/create` (Post) Creates a new message. Request body example: { "message": "msg-1" }.
-`http://localhost:5555/api/v1/swagger/index.html` (Get) Swagger documentation.
+`http://localhost:5555/api/v1/getMessages` (Get) Returns a list of all messages, or an empty array if there are none.  
+
+`http://localhost:5555/api/v1/create` (Post) Creates a new message. Request body example: { "message": "msg-1" }.  
+
+`http://localhost:5555/api/v1/swagger/index.html` (Get) Swagger documentation.  
 
 ### How to start
 1. _cd mini; make build_image_
@@ -23,7 +25,7 @@
     - _create database minidb;_
     - _\q_
 6. Start migration
-    - _docker inspect miniPostgresCont_ and copy field <IPAddress> (for exemple 172.21.0.2)
+    - _docker inspect miniPostgresCont_ and copy field <IPAddress> (example 172.21.0.2)
     - _migrate -path db/migrations -database "postgres://postgres:postgres@<IPAddress>:5432/minidb?sslmode=disable" -verbose up_    
 7. Start server with command number 3
 8. Open new terminal and create topic
