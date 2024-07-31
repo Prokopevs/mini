@@ -91,8 +91,7 @@ func run() error {
 //	@version 1.0
 //	@description This is mini server
 //	@host mini.eridani.site
-// 	@schemes http https
-//	@BasePath /api/v1
+// 	@schemes https
 func main() {
 	err := run()
 	if err != nil {

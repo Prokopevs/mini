@@ -1,4 +1,3 @@
-basePath: /api/v1
 definitions:
   handler.errorResponse:
     properties:
@@ -81,6 +80,5 @@ paths:
             $ref: '#/definitions/handler.errorResponse'
       summary: Get all messages
 schemes:
-- http
 - https
 swagger: "2.0"

@@ -1,6 +1,5 @@
 {
     "schemes": [
-        "http",
         "https"
     ],
     "swagger": "2.0",
@@ -11,7 +10,6 @@
         "version": "1.0"
     },
     "host": "mini.eridani.site",
-    "basePath": "/api/v1",
     "paths": {
         "/api/v1/create": {
             "post": {

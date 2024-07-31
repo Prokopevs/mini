@@ -137,8 +137,8 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "mini.eridani.site",
-	BasePath:         "/api/v1",
-	Schemes:          []string{"http", "https"},
+	BasePath:         "",
+	Schemes:          []string{"https"},
 	Title:            "mini server",
 	Description:      "This is mini server",
 	InfoInstanceName: "swagger",
