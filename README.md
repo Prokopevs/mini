@@ -25,13 +25,20 @@
     - _create database minidb;_
     - _\q_
 6. Start migration
-    - _docker inspect miniPostgresCont_ and copy field <IPAddress> (example 172.21.0.2)
-    - _migrate -path db/migrations -database "postgres://postgres:postgres@<IPAddress>:5432/minidb?sslmode=disable" -verbose up_    
+    - _docker inspect miniPostgresCont_ and copy field `IPAddress` (example 172.21.0.2)
+    - _migrate -path db/migrations -database "postgres://postgres:postgres@`IPAddress`:5432/minidb?sslmode=disable" -verbose up_    
+    - if you don't want to use migrations you can create table messages with terminal:
+        - _docker exec -it miniPostgresCont psql -U postgres_
+        - _\c minidb;_
+        - copy sql command from server/db/migrations/up.sql and past into terminal
+        - _\q_
 7. Start server with command number 3
 8. Open new terminal and create topic
     - _docker-compose exec broker kafka-topics --create --topic topicname --partitions 1 --replication-factor 1 --bootstrap-server broker:9092_
     - _docker exec broker kafka-topics --bootstrap-server broker:9092 --describe todos_ check if the topic was created
-9. restart server _ctrl+c + command number 3_
+9. restart server 
+    - _ctrl+c_
+    - _command number 3_
 
 ### Logs
 message-api-1     | {"level":"info","ts":1722179582.900519,"caller":"db/message.go:20","msg":"Successfully added to db message with id","id":128}
