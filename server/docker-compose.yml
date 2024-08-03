@@ -32,6 +32,7 @@ services:
       BUFFER_SIZE: ${BUFFER_SIZE}
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.0
+    restart: unless-stopped
     container_name: zookeeper
     networks:
       - testNet
@@ -40,6 +41,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
   broker:
     image: confluentinc/cp-kafka:7.7.0
+    restart: unless-stopped
     container_name: broker
     depends_on:
       - zookeeper
